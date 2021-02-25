@@ -42,7 +42,7 @@ const Container = styled.div`
         position: relative;
         box-shadow: 0 1px 0 0 #222121;
         height: 50px;
-
+        z-index: 101;
 `
 
 const Main = styled.div`

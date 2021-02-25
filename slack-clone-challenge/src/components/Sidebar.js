@@ -1,18 +1,35 @@
 import React from 'react'
 import styled from "styled-components";
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import {ChannelsData, SidebarItemsData} from "../data/SidebarData";
+import { SidebarItemsData} from "../data/SidebarData";
 import AddIcon from '@material-ui/icons/Add';
 import TypeWriter from "react-typewriter";
+import db from "../firebase";
+import LottieAnimation from '../Lottie/lottie';
+import rocket from "../Lottie/rocket.json";
 
-function Sidebar() {
+function Sidebar(props) {
+
+            const addChannel = () => {
+                const promptName = prompt("Enter Channel Name:");
+                if(promptName){
+                    db.collection('rooms').add({
+                        name: promptName
+                    })
+                }
+            }
+
+
+     
     return (
         <Container>
             <WorkSpaceContainer>
                 <Name>
-                    <TypeWriter typing={0.7} minDelay={100}>Muzzammil's Slack 🚀</TypeWriter>
-                    <h3></h3>
+                <TypeWriter typing={0.7} minDelay={100}>
+                Muzzammil's Slack  </TypeWriter>
+                   
                 </Name>
+                <LottieAnimation lotti={rocket} height={40} width={40}/>
                 <NewMessage>
                     <AddCircleOutlineIcon />
                 </NewMessage>
@@ -36,18 +53,23 @@ function Sidebar() {
                     <div>
                         Channels
                     </div>
-                    <AddIcon/>
+                    <AddIcon onClick={addChannel}/>
                    
                 </NewChannelContainer>
                 <ChannelsList>
+                
                     {
-                        ChannelsData.map(channel => (
+                        props.rooms.map((item) => {
+                            return(
                             <Channel>
-                                {channel.icon}
-                                {channel.text}
+                                # {item.name}
                             </Channel>
-                        ))
+                            )
+                            
+                        })
                     }
+
+                
                 </ChannelsList>
 
             </ChannelsContainer>
@@ -59,6 +81,7 @@ export default Sidebar
 
 const Container = styled.div`
     background: #222121;
+    z-index: 100;
 `
 const WorkSpaceContainer = styled.div`
     color: #fdfcef;
@@ -77,6 +100,8 @@ const Border = styled.div`
 `
 
 const Name = styled.div`
+   display: flex;
+   align-items: center;
     h3 {
         font-weight: 500;
     }
@@ -127,7 +152,9 @@ const NewChannelContainer = styled.div`
     padding-left: 19px;
     height: 28px;
     padding-right: 12px;
-
+    .MuiSvgIcon-root{
+        cursor: pointer;
+    }
 `
 
 const ChannelsList = styled.div`
@@ -137,7 +164,7 @@ const ChannelsList = styled.div`
 const Channel = styled.div`
     color: #fdfcef;
     height: 28px;
-    display: grid;
+    display: flex;
     grid-template-columns: 15% auto;
    // justify-content: space-between;
     align-items: center;
